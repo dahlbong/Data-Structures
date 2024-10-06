@@ -86,7 +86,36 @@ int main()
 
 void moveOddItemsToBack(LinkedList *ll)
 {
-	/* add your code here */
+    if (ll == NULL && ll->head == NULL) return;
+
+    ListNode *cur = ll->head;
+    ListNode *nextNode;
+    LinkedList odd;
+    odd.head = NULL;
+    odd.size = 0;
+
+    int index = 0;
+    int removes = 0;
+
+    // 원래 리스트에서 홀수 노드들을 odd 리스트로 이동
+    while (cur != NULL) {
+        nextNode = cur->next;  
+        if (cur->item % 2 != 0) { 
+            insertNode(&odd, odd.size, cur->item);
+            removeNode(ll, index - removes);
+            removes++;  // 제거된 노드 개수 증가
+        }
+		index ++;
+        cur = nextNode;
+    }
+
+    // odd 리스트의 노드들을 원래 리스트의 뒤에 추가
+    cur = odd.head;
+    while (cur != NULL) {
+        insertNode(ll, ll->size, cur->item);
+        cur = cur->next;
+    }
+    removeAllItems(&odd);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////

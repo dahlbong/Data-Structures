@@ -86,8 +86,38 @@ int main()
 
 void moveEvenItemsToBack(LinkedList *ll)
 {
-	/* add your code here */
+    if (ll == NULL && ll->head == NULL) return;
+
+    ListNode *cur = ll->head;
+    ListNode *nextNode;
+    LinkedList even;
+    even.head = NULL;
+    even.size = 0;
+
+    int index = 0;
+    int removes = 0;
+	
+    // 원래 리스트에서 홀수 노드들을 even 리스트로 이동
+    while (cur != NULL) {
+        nextNode = cur->next;  
+        if (cur->item % 2 == 0) { 
+            insertNode(&even, even.size, cur->item);
+            removeNode(ll, index - removes);
+            removes++;  // 제거된 노드 개수 증가
+        }
+		index ++;
+        cur = nextNode;
+    }
+
+    // even 리스트의 노드들을 원래 리스트의 뒤에 추가
+    cur = even.head;
+    while (cur != NULL) {
+        insertNode(ll, ll->size, cur->item);
+        cur = cur->next;
+    }
+    removeAllItems(&even);
 }
+
 
 ///////////////////////////////////////////////////////////////////////////////////
 
