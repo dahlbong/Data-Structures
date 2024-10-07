@@ -111,7 +111,20 @@ int main()
 
 void removeUntil(Stack *s, int value)
 {
-/* add your code here */
+	/* add your code here */
+	if (s->ll.size == 0 || s == NULL) return;
+
+	ListNode *cur = s->ll.head;
+	int cnt = 0;
+	while (cur != NULL) {
+		if (cur->item == value) {
+			s->ll.head = cur;
+			break;
+		}
+		cnt ++;
+		cur = cur->next;
+	}
+	s->ll.size = s->ll.size - cnt;
 }
 
 //////////////////////////////////////////////////////////////////////////////////
