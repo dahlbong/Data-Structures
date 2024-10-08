@@ -93,8 +93,20 @@ int main()
 
 void levelOrderTraversal(BSTNode* root)
 {
-
     /* add your code here */
+	if (root == NULL) return;
+	Queue q;
+	q.head = NULL;
+	q.tail = NULL;
+
+	enqueue(&(q.head), &(q.tail), root);
+	while (q.head != NULL) {
+		BSTNode *temp = dequeue(&(q.head), &(q.tail));
+		printf("%d ", temp->item);
+
+		if (temp->left != NULL) enqueue(&(q.head), &(q.tail), temp->left);
+		if (temp->right != NULL) enqueue(&(q.head), &(q.tail), temp->right);
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -130,7 +142,12 @@ void insertBSTNode(BSTNode **node, int value){
 // enqueue node
 void enqueue(QueueNode **headPtr, QueueNode **tailPtr, BSTNode *node)
 {
+	// Pointer : 변수의 주소를 가지기 위해서
+	// Double Pointer : 변수의 주소를 가지고 있는 포인터 변수의 주소를 가지기 위해서
+
 	// dynamically allocate memory
+	// malloc 함수는 : QueueNode 구조체가 가진 Size만큼 메모리를 할당하고 시작 주소를 반환한다.
+	// newPtr -> malloc 함수가 할당한 메모리의 시작 주소.
 	QueueNode *newPtr = malloc(sizeof(QueueNode));
 
 	// if newPtr does not equal NULL
