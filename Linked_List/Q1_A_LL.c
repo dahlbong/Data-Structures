@@ -90,24 +90,25 @@ int main()
 
 int insertSortedLL(LinkedList *ll, int new_item)
 {
-	/* add your code here */
 	ListNode *temp;
+	// 기저조건: head 노드값이 추가하려는 노드보다 크거나, 리스트가 비어있으면 0번 인덱스에 노드 삽입
 	if (ll->size == 0 || ll->head->item > new_item) {
         insertNode(ll, 0, new_item);
         return 0;
     }
 
 	for (int i=0; i < ll->size; i++) {
-		temp = findNode(ll, i);
-		if (temp->item == new_item) {
+		// 리스트에 이미 존재하는 정수라면 삽입하지 않음
+		if (findNode(ll, i)->item == new_item) {
 			return -1;
 		}
-		if (i == ll->size - 1 || findNode(ll, i+1) -> item > new_item) {
+		// i가 마지막 노드의 index거나, 삽입하려는 수보다 더 큰 수를 찾았다면 i+1번째 인덱스로 새 노드 삽입
+		if (i == ll->size - 1 || findNode(ll, i+1)->item > new_item) {
 			insertNode(ll, i+1, new_item);
-			return 0;
+			return i+1;
 		}
 	}
-	return 0;
+	return -1;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -170,11 +171,11 @@ ListNode *findNode(LinkedList *ll, int index){
 int insertNode(LinkedList *ll, int index, int value){
 
 	ListNode *pre, *cur;
-
+	//리스트가 존재하지 않거나, 인덱스가 유효범위 밖일 경우 -1(동작하지 않음 표시자) 반환
 	if (ll == NULL || index < 0 || index > ll->size + 1)
 		return -1;
 
-	// If empty list or inserting first node, need to update head pointer
+	// 리스트가 비어있거나, 파라미터로 받은 인덱스가 0이면 연결리스트의 첫번째 노드로 새 노드 삽입
 	if (ll->head == NULL || index == 0){
 		cur = ll->head;
 		ll->head = malloc(sizeof(ListNode));
@@ -185,8 +186,7 @@ int insertNode(LinkedList *ll, int index, int value){
 	}
 
 
-	// Find the nodes before and at the target position
-	// Create a new node and reconnect the links
+	// 이전 노드가 존재한다면 이전 노드의 next노드를 업데이트 해주기
 	if ((pre = findNode(ll, index - 1)) != NULL){
 		cur = pre->next;
 		pre->next = malloc(sizeof(ListNode));
@@ -204,11 +204,11 @@ int removeNode(LinkedList *ll, int index){
 
 	ListNode *pre, *cur;
 
-	// Highest index we can remove is size-1
+	//리스트가 존재하지 않거나, 인덱스가 유효범위 밖일 경우 -1(동작하지 않음 표시자) 반환
 	if (ll == NULL || index < 0 || index >= ll->size)
 		return -1;
 
-	// If removing first node, need to update head pointer
+	// 첫번째(0번 index) 노드를 삭제할 경우 삭제와 함께 head 값도 업데이트 해주기
 	if (index == 0){
 		cur = ll->head->next;
 		free(ll->head);
@@ -218,8 +218,7 @@ int removeNode(LinkedList *ll, int index){
 		return 0;
 	}
 
-	// Find the nodes before and after the target position
-	// Free the target node and reconnect the links
+	// 타겟 index의 이전 노드가 존재한다면 이전 노드의 next 포인터를 업데이트 시키고 cur은 할당해제
 	if ((pre = findNode(ll, index - 1)) != NULL){
 
 		if (pre->next == NULL)
